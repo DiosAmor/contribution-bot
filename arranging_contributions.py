@@ -13,8 +13,6 @@ def edit_excel(filename, sheetname, update_list):
     excel_file = openpyxl.load_workbook(filename)
     excel_sheet = excel_file[sheetname]
 
-    sheet_data = []
-    year_dcn_list = []
     excel_sheet.cell(row=1, column=11, value="Topic").font = header_font
     excel_sheet.cell(row=1, column=12, value="Session").font = header_font
     for row in range(2, excel_sheet.max_row + 1):
@@ -30,7 +28,25 @@ def edit_excel(filename, sheetname, update_list):
 
 def open_teleconference_agenda(filename):
     doc = Document(filename)
-    pass
+    submission_list = []
+
+    # 세 번째 테이블이 기고문 리스트
+    table = doc.tables[2]
+    for row in table.rows:
+        year = row.cells[0].text.split("/")[0]
+        if not year.isdigit():
+            continue
+        if len(year) > 2:
+            dcn = year
+            year = "2023"
+        else:
+            dcn = row.cells[0].text.split("/")[1]
+            year = "20" + year
+        topic = row.cells[4].text
+        session = row.cells[5].text
+        items = [year, dcn, topic, session]
+        submission_list.append(items)
+    return submission_list
 
 
 def open_meeting_agenda(filename):
@@ -47,13 +63,10 @@ def open_meeting_agenda(filename):
                     year = row.cells[0].text.split("/")[0]
                     if not year.isdigit():
                         continue
-                    if len(year) < 5:
+                    if len(year) > 2:
                         dcn = year
                         year = "2023"
                     else:
-                        # print(submission_idx)
-                        # print(row.cells[0].text)
-                        print(row.cells[0].text)
                         dcn = row.cells[0].text.split("/")[1]
                         year = "20" + year
                     topic = row.cells[4].text
@@ -64,19 +77,22 @@ def open_meeting_agenda(filename):
 
 
 def do_arrangement():
-    filename_pptx = [
+    filename_list = [
         "11-23-1713-14-00bn-tgbn-nov-2023-meeting-agenda.pptx",
+        "11-23-2140-10-00bn-nov-jan-tgbn-teleconference-agenda.docx",
         "11-23-2174-11-00bn-tgbn-jan-2024-meeting-agenda.pptx",
+        "11-24-0201-11-00bn-jan-mar-tgbn-teleconference-agenda.docx",
         "11-24-0235-14-00bn-tgbn-mar-2024-meeting-agenda.pptx",
+        "11-24-0633-15-00bn-mar-may-tgbn-teleconference-agenda.docx",
         "11-24-0653-15-00bn-tgbn-may-2024-meeting-agenda.pptx",
+        "11-24-0964-05-00bn-may-july-tgbn-teleconference-agenda.docx",
     ]
-    # excel_filename = "802.11_contributions-cmlee-240607-edit.xlsx"
     excel_filename = "test.xlsx"
-    for filename in filename_pptx:
+    for filename in filename_list:
+        print(filename)
         if filename.endswith(".docx"):
             submission_list = open_teleconference_agenda("agenda/" + filename)
         else:
-            print(filename)
             submission_list = open_meeting_agenda("agenda/" + filename)
         edit_excel(excel_filename, "00bn", submission_list)
 
