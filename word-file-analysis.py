@@ -1,14 +1,17 @@
 from docx import Document
 
 # 워드 파일 열기
-doc = Document("11-24-0964-01-00bn-may-july-tgbn-teleconference-agenda.docx")
+doc = Document("11-24-0633-15-00bn-mar-may-tgbn-teleconference-agenda.docx")
 
 # print(doc.paragraphs)
+submission_list = []
 for table in doc.tables[2:3]:
-    print(type(table))
-    for row in table.rows[3:8]:
+    for row in table.rows[3:15]:
+        items = []
         for cell in row.cells:
-            print(cell.text)
+            items.append(cell.text)
+        submission_list.append(items)
+print(submission_list)
 
 # 모든 단락 읽기
 # for para in doc.paragraphs:
