@@ -5,8 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 from openpyxl.styles import Font, colors
 
-spec_list = ["0uhr", "00bn", "0eht", "00be"]
-spec_list2 = [5, 9, 2, 111]
+spec_list = ["0s1g", "00ah", "0hew", "00ax"]
+spec_list2 = [1, 27, 6, 72]
 url = "https://mentor.ieee.org/802.11/documents?"
 
 
@@ -129,15 +129,17 @@ def do_crawling():
                 row[-1] = link
                 contributions_lists.append(row)
         write_excel_template(
-            "802.11_contributions.xlsx", i, spec_list[i], contributions_lists
+            "802.11_contributions_ah_ax.xlsx", i, spec_list[i], contributions_lists
         )
 
 
 def leave_latest_contributions():
-    filename = "802.11_contributions-cmlee-240607.xlsx"
-    edit_filename = "802.11_contributions-cmlee-240607-edit.xlsx"
+    filename = "802.11_contributions_ah_ax.xlsx"
+    edit_filename = "802.11_contributions_ah_ax-cmlee.xlsx"
     for i in range(4):
         original_excel_file = read_excel_template(filename, spec_list[i])
         write_excel_template(edit_filename, i, spec_list[i], original_excel_file)
 
-# leave_latest_contributions()
+
+# do_crawling()
+leave_latest_contributions()
